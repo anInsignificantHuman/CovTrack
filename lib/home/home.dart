@@ -1,4 +1,4 @@
-import 'int'
+import 'package:intl/intl.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -131,80 +131,9 @@ class _HomeState extends State<Home> {
                 top: 20.0
               )
             ),
-            Center(
-              child: Card(
-                shape: RoundedRectangleBorder( 
-                  borderRadius: BorderRadius.circular(18.0)
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(16.0, 16.0, 20.0, 0.0),
-                  child: LineChart(
-                    LineChartData(  
-                      minX: 0,
-                      maxX: 2,
-                      minY: 40000000, 
-                      maxY: 60000000,
-                      borderData: FlBorderData(
-                        border: Border.all(
-                          color: Colors.white
-                        )
-                      ),
-                      titlesData: FlTitlesData(
-                        leftTitles: SideTitles(  
-                          showTitles: true, 
-                          interval: 20000000 / 2,
-                          getTextStyles: (value) {
-                            return TextStyle(  
-                              color: Colors.white, 
-                              fontSize: 15.0, 
-                              fontFamily: 'Dosis'  
-                            );
-                          }
-                        ), 
-                        bottomTitles: SideTitles(  
-                          getTitles: (dynamic value) {
-                            value = value.round();
-                            switch (value) {
-                              case 0:
-                                return DateFormat()
-                              case 1: 
-                                return 'Yesterday'; 
-                              case 2: 
-                                return 'Today';
-                            }
-                          },
-                          showTitles: true, 
-                          getTextStyles: (value) {
-                            return TextStyle(  
-                              color: Colors.white, 
-                              fontSize: 15.0, 
-                              fontFamily: 'Dosis'  
-                            );
-                          }
-                        )
-                      ),
-                      gridData: FlGridData(
-                        horizontalInterval: 20000000 / 6, 
-                        getDrawingHorizontalLine: (value) {
-                          return FlLine(
-                            color: Colors.white, 
-                            strokeWidth: 1.0
-                          );
-                        },
-                      ),
-                      lineBarsData: [
-                        LineChartBarData(
-                          spots: [
-                            FlSpot(0, 40004760), 
-                            FlSpot(1, 51060609), 
-                            FlSpot(2, 60000000)
-                          ]
-                        )
-                      ]
-                    )
-                  ),
-                ),
-              ),
+            CountryPage(50000, 60000, 70000), 
+            Padding( 
+              padding: const EdgeInsets.only(top: 60.0)
             )
           ]
         ),
@@ -215,6 +144,100 @@ class _HomeState extends State<Home> {
         visualDensity: VisualDensity.adaptivePlatformDensity,
         brightness: Brightness.dark
       )
+    );
+  }
+}
+
+class CountryPage extends StatelessWidget {
+  final double point1, point2, point3;
+  CountryPage(this.point1, this.point2, this.point3);
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Card(
+        color: Color(0xff020227), 
+        elevation: 50,
+        shape: RoundedRectangleBorder( 
+          borderRadius: BorderRadius.circular(18.0)
+        ),
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(16.0, 24.0, 36.0, 10.0),
+          child: LineChart(
+            LineChartData(  
+              minX: 0,
+              maxX: 2,
+              minY: this.point1, 
+              maxY: this.point3 + 6,
+              borderData: FlBorderData(
+                border: Border.all(
+                  color: Colors.white
+                )
+              ),
+              titlesData: FlTitlesData(
+                leftTitles: SideTitles(  
+                  showTitles: true, 
+                  interval: this.point3 + 6 - this.point1,
+                  getTextStyles: (value) {
+                    return TextStyle(  
+                      color: Colors.white, 
+                      fontSize: 15.0, 
+                      fontFamily: 'Dosis'  
+                    );
+                  }
+                ), 
+                bottomTitles: SideTitles(  
+                  margin: 14.0,
+                  getTitles: (dynamic value) {
+                    value = value.round();
+                    switch (value) {
+                      case 2:
+                        return DateFormat('EEEE')
+                          .format(DateTime.now().toUtc());
+                      case 1: 
+                        return DateFormat('EEEE')
+                          .format(DateTime.now().toUtc().subtract(
+                            Duration(days: 1)
+                          ));
+                      default: 
+                        return DateFormat('EEEE')
+                          .format(DateTime.now().toUtc().subtract(
+                            Duration(days: 2)
+                          ));
+                    }
+                  },
+                  showTitles: true, 
+                  getTextStyles: (value) {
+                    return TextStyle(  
+                      color: Colors.white, 
+                      fontSize: 15.0, 
+                      fontFamily: 'Dosis'  
+                    );
+                  }
+                )
+              ),
+              gridData: FlGridData(
+                horizontalInterval: (this.point3 + 6 - this.point1) / 6, 
+                getDrawingHorizontalLine: (value) {
+                  return FlLine(
+                    color: Colors.white, 
+                    strokeWidth: 1.0
+                  );
+                },
+              ),
+              lineBarsData: [
+                LineChartBarData(
+                  spots: [
+                    FlSpot(0, this.point1), 
+                    FlSpot(1, this.point2), 
+                    FlSpot(2, this.point3)
+                  ]
+                )
+              ]
+            )
+          ),
+        ),
+      ),
     );
   }
 }
