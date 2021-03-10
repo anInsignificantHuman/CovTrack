@@ -131,10 +131,6 @@ class _HomeState extends State<Home> {
                 top: 20.0
               )
             ),
-            CountryPage(50000, 60000, 70000), 
-            Padding( 
-              padding: const EdgeInsets.only(top: 60.0)
-            )
           ]
         ),
         drawer: Menu("home"), 
@@ -154,90 +150,107 @@ class CountryPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Card(
-        color: Color(0xff020227), 
-        elevation: 50,
-        shape: RoundedRectangleBorder( 
-          borderRadius: BorderRadius.circular(18.0)
-        ),
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(16.0, 24.0, 36.0, 10.0),
-          child: LineChart(
-            LineChartData(  
-              minX: 0,
-              maxX: 2,
-              minY: this.point1, 
-              maxY: this.point3 + 6,
-              borderData: FlBorderData(
-                border: Border.all(
-                  color: Colors.white
-                )
-              ),
-              titlesData: FlTitlesData(
-                leftTitles: SideTitles(  
-                  showTitles: true, 
-                  interval: this.point3 + 6 - this.point1,
-                  getTextStyles: (value) {
-                    return TextStyle(  
-                      color: Colors.white, 
-                      fontSize: 15.0, 
-                      fontFamily: 'Dosis'  
-                    );
-                  }
-                ), 
-                bottomTitles: SideTitles(  
-                  margin: 14.0,
-                  getTitles: (dynamic value) {
-                    value = value.round();
-                    switch (value) {
-                      case 2:
-                        return DateFormat('EEEE')
-                          .format(DateTime.now().toUtc());
-                      case 1: 
-                        return DateFormat('EEEE')
-                          .format(DateTime.now().toUtc().subtract(
-                            Duration(days: 1)
-                          ));
-                      default: 
-                        return DateFormat('EEEE')
-                          .format(DateTime.now().toUtc().subtract(
-                            Duration(days: 2)
-                          ));
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.blueGrey[900],
+        centerTitle: true,
+        title: Text(
+          'CovTrack',
+          style: TextStyle(
+            fontFamily: 'Dosis',
+            fontWeight: FontWeight.w700,
+            fontSize: 30.0,
+            letterSpacing: 1.25
+          )
+        )
+      ),
+      body: Center(
+        child: Card(
+          color: Color(0xff020227), 
+          elevation: 50,
+          shape: RoundedRectangleBorder( 
+            borderRadius: BorderRadius.circular(18.0)
+          ),
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(16.0, 24.0, 38.0, 10.0),
+            child: LineChart(
+              LineChartData(  
+                minX: 0,
+                maxX: 2,
+                minY: this.point1, 
+                maxY: this.point3 + 6,
+                borderData: FlBorderData(
+                  border: Border.all(
+                    color: Colors.white
+                  )
+                ),
+                titlesData: FlTitlesData(
+                  leftTitles: SideTitles(  
+                    margin: 10.0,
+                    showTitles: true, 
+                    interval: this.point3 + 6 - this.point1,
+                    getTextStyles: (value) {
+                      return TextStyle(  
+                        color: Colors.white, 
+                        fontSize: 15.0, 
+                        fontFamily: 'Dosis'  
+                      );
                     }
-                  },
-                  showTitles: true, 
-                  getTextStyles: (value) {
-                    return TextStyle(  
+                  ), 
+                  bottomTitles: SideTitles(  
+                    margin: 14.0,
+                    getTitles: (dynamic value) {
+                      value = value.round();
+                      switch (value) {
+                        case 2:
+                          return DateFormat('EEEE')
+                            .format(DateTime.now().toUtc())
+                            .substring(0, 3);
+                        case 1: 
+                          return DateFormat('EEEE')
+                            .format(DateTime.now().toUtc().subtract(
+                              Duration(days: 1)
+                            )).substring(0, 3);
+                        default: 
+                          return DateFormat('EEEE')
+                            .format(DateTime.now().toUtc().subtract(
+                              Duration(days: 2)
+                            )).substring(0, 3);
+                      }
+                    },
+                    showTitles: true, 
+                    getTextStyles: (value) {
+                      return TextStyle(  
+                        color: Colors.white, 
+                        fontSize: 15.0, 
+                        fontFamily: 'Dosis'  
+                      );
+                    }
+                  )
+                ),
+                gridData: FlGridData(
+                  horizontalInterval: (this.point3 + 6 - this.point1) / 6, 
+                  getDrawingHorizontalLine: (value) {
+                    return FlLine(
                       color: Colors.white, 
-                      fontSize: 15.0, 
-                      fontFamily: 'Dosis'  
+                      strokeWidth: 1.0
                     );
-                  }
-                )
-              ),
-              gridData: FlGridData(
-                horizontalInterval: (this.point3 + 6 - this.point1) / 6, 
-                getDrawingHorizontalLine: (value) {
-                  return FlLine(
-                    color: Colors.white, 
-                    strokeWidth: 1.0
-                  );
-                },
-              ),
-              lineBarsData: [
-                LineChartBarData(
-                  spots: [
-                    FlSpot(0, this.point1), 
-                    FlSpot(1, this.point2), 
-                    FlSpot(2, this.point3)
-                  ]
-                )
-              ]
-            )
+                  },
+                ),
+                lineBarsData: [
+                  LineChartBarData(
+                    spots: [
+                      FlSpot(0, this.point1), 
+                      FlSpot(1, this.point2), 
+                      FlSpot(2, this.point3)
+                    ]
+                  )
+                ]
+              )
+            ),
           ),
         ),
-      ),
+      )
     );
   }
 }
@@ -278,7 +291,13 @@ class CountryList extends StatelessWidget {
                   padding: const EdgeInsets.only(  
                     left: 10.0
                   ), 
-                  onPressed: () {}
+                  onPressed: () {
+                    Navigator.push(  
+                      context, MaterialPageRoute(  
+                        builder: (context) => CountryPage(500000, 600000, 700000)
+                      )
+                    );
+                  }
                 ) 
               ),
             ],

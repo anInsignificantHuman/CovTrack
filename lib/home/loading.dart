@@ -6,6 +6,14 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'home.dart';
 
 http.Client client;
+String intOf(number) {
+  try {
+    var defaultLocalizations = DefaultMaterialLocalizations();
+    return defaultLocalizations.formatDecimal(int.parse(number));
+  } catch (e) {
+    return "N/A";
+  }
+}
 
 class GlobalLoading extends StatefulWidget {
   @override
@@ -38,14 +46,6 @@ class GlobalLoadScreen extends StatefulWidget {
 }
 
 class _GlobalLoadScreenState extends State<GlobalLoadScreen> {
-  String intOf(number) {
-    try {
-      var defaultLocalizations = DefaultMaterialLocalizations();
-      return defaultLocalizations.formatDecimal(int.parse(number));
-    } catch (e) {
-      return "N/A";
-    }
-  }
   Future<void> getData() async {
     print("A");
     Stopwatch stopwatch = Stopwatch()..start();
