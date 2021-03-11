@@ -144,9 +144,9 @@ class _HomeState extends State<Home> {
   }
 }
 
-class CountryPage extends StatelessWidget {
+class CountryGraph extends StatelessWidget {
   final double point1, point2, point3;
-  CountryPage(this.point1, this.point2, this.point3);
+  CountryGraph(this.point1, this.point2, this.point3);
 
   @override
   Widget build(BuildContext context) {
@@ -172,7 +172,7 @@ class CountryPage extends StatelessWidget {
             borderRadius: BorderRadius.circular(18.0)
           ),
           child: Padding(
-            padding: const EdgeInsets.fromLTRB(16.0, 24.0, 38.0, 10.0),
+            padding: const EdgeInsets.fromLTRB(22.0, 32.0, 42.0, 10.0),
             child: LineChart(
               LineChartData(  
                 minX: 0,
@@ -186,7 +186,7 @@ class CountryPage extends StatelessWidget {
                 ),
                 titlesData: FlTitlesData(
                   leftTitles: SideTitles(  
-                    margin: 10.0,
+                    margin: 14.0,
                     showTitles: true, 
                     interval: this.point3 + 6 - this.point1,
                     getTextStyles: (value) {
@@ -198,7 +198,7 @@ class CountryPage extends StatelessWidget {
                     }
                   ), 
                   bottomTitles: SideTitles(  
-                    margin: 14.0,
+                    margin: 20.0,
                     getTitles: (dynamic value) {
                       value = value.round();
                       switch (value) {
@@ -292,11 +292,24 @@ class CountryList extends StatelessWidget {
                     left: 10.0
                   ), 
                   onPressed: () {
-                    Navigator.push(  
-                      context, MaterialPageRoute(  
-                        builder: (context) => CountryPage(500000, 600000, 700000)
-                      )
-                    );
+                    try {
+                      Navigator.push(  
+                        context, MaterialPageRoute(  
+                          builder: (context) => CountryGraph(
+                            double.parse(dataTable[dataTable.keys.toList()[index]][4]
+                              .replaceAll(",", "")), 
+                            double.parse(dataTable[dataTable.keys.toList()[index]][2]
+                              .replaceAll(",", "")), 
+                            double.parse(dataTable[dataTable.keys.toList()[index]][2]
+                              .replaceAll(",", "")) +
+                                (double.parse(dataTable[dataTable.keys.toList()[index]][2]
+                                  .replaceAll(",", "")) - 
+                                  double.parse(dataTable[dataTable.keys.toList()[index]][4]
+                                    .replaceAll(",", "")))
+                          )
+                        )
+                      );
+                    } catch(e) {}
                   }
                 ) 
               ),
