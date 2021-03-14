@@ -144,9 +144,24 @@ class _HomeState extends State<Home> {
   }
 }
 
-class CountryGraph extends StatelessWidget {
-  final double point1, point2, point3;
-  CountryGraph(this.point1, this.point2, this.point3);
+class CountryGraph extends StatefulWidget {
+  final num point1, point2, point3, point4;
+  CountryGraph(this.point1, this.point2, this.point3, this.point4);
+
+  @override
+  _CountryGraphState createState() => _CountryGraphState(this.point1, this.point2, this.point3, this.point4);
+}
+
+class _CountryGraphState extends State<CountryGraph> {
+  final num point1, point2, point3, point4;
+  _CountryGraphState(this.point1, this.point2, this.point3, this.point4);
+  get maxY => (this.point4 > this.point3) ? this.point4 : this.point3;
+
+  @override
+  void initState() {
+    super.initState();
+    print(dataTable["South Africa"]);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -178,7 +193,7 @@ class CountryGraph extends StatelessWidget {
                 minX: 0,
                 maxX: 2,
                 minY: this.point1, 
-                maxY: this.point3 + 6,
+                maxY: maxY + 6,
                 borderData: FlBorderData(
                   border: Border.all(
                     color: Colors.white
@@ -188,7 +203,11 @@ class CountryGraph extends StatelessWidget {
                   leftTitles: SideTitles(  
                     margin: 14.0,
                     showTitles: true, 
-                    interval: this.point3 + 6 - this.point1,
+                    interval: maxY + 6 - this.point1,
+                    getTitles: (dynamic value) {
+                      var formatter = NumberFormat.compact();
+                      return formatter.format(value);
+                    },
                     getTextStyles: (value) {
                       return TextStyle(  
                         color: Colors.white, 
@@ -229,7 +248,7 @@ class CountryGraph extends StatelessWidget {
                   )
                 ),
                 gridData: FlGridData(
-                  horizontalInterval: (this.point3 + 6 - this.point1) / 6, 
+                  horizontalInterval: (maxY + 6 - this.point1) / 6, 
                   getDrawingHorizontalLine: (value) {
                     return FlLine(
                       color: Colors.white, 
@@ -237,12 +256,23 @@ class CountryGraph extends StatelessWidget {
                     );
                   },
                 ),
+                lineTouchData: LineTouchData(  
+                  enabled: false 
+                ),
                 lineBarsData: [
                   LineChartBarData(
                     spots: [
                       FlSpot(0, this.point1), 
                       FlSpot(1, this.point2), 
                       FlSpot(2, this.point3)
+                    ]
+                  ), 
+                  LineChartBarData(  
+                    dashArray: [5, 5],
+                    colors: [Colors.red[400]],
+                    spots: [
+                      FlSpot(1, this.point2), 
+                      FlSpot(2, this.point4)
                     ]
                   )
                 ]
@@ -300,6 +330,8 @@ class CountryList extends StatelessWidget {
                               .replaceAll(",", "")), 
                             double.parse(dataTable[dataTable.keys.toList()[index]][2]
                               .replaceAll(",", "")), 
+                            double.parse(dataTable[dataTable.keys.toList()[index]][0]
+                              .replaceAll(",", "")),
                             double.parse(dataTable[dataTable.keys.toList()[index]][2]
                               .replaceAll(",", "")) +
                                 (double.parse(dataTable[dataTable.keys.toList()[index]][2]

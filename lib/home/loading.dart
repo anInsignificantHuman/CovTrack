@@ -47,7 +47,6 @@ class GlobalLoadScreen extends StatefulWidget {
 
 class _GlobalLoadScreenState extends State<GlobalLoadScreen> {
   Future<void> getData() async {
-    print("A");
     Stopwatch stopwatch = Stopwatch()..start();
     http.Response response = await client.get("https://covid19.who.int/");
     var document = html.parse(response.body);
