@@ -155,16 +155,49 @@ class CountryGraph extends StatefulWidget {
 class _CountryGraphState extends State<CountryGraph> {
   final num point1, point2, point3, point4;
   _CountryGraphState(this.point1, this.point2, this.point3, this.point4);
-  get maxY => (this.point4 > this.point3) ? this.point4 : this.point3;
+  bool isSwitched = true;
+  get maxY => (this.point4 >= this.point3) ? this.point4 : this.point3;
+  get lineBarsIndex => (this.point4 >= this.point3) ? 1 : 0;
+  get flIndex => (this.point4 >= this.point3) ? 1 : 2;
 
-  @override
-  void initState() {
-    super.initState();
-    print(dataTable["South Africa"]);
+  String dayOfWeek(dynamic value) {
+    switch (value) {
+      case 2:
+        return DateFormat('EEEE')
+          .format(DateTime.now().toUtc())
+          .substring(0, 3);
+        case 1: 
+          return DateFormat('EEEE')
+            .format(DateTime.now().toUtc().subtract(
+              Duration(days: 1)
+            )).substring(0, 3);
+        default: 
+          return DateFormat('EEEE')
+            .format(DateTime.now().toUtc().subtract(
+              Duration(days: 2)
+            )).substring(0, 3);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    var lineBarsData = [
+      LineChartBarData(
+        spots: [
+          FlSpot(0, this.point1), 
+          FlSpot(1, this.point2), 
+          FlSpot(2, this.point3)
+        ]
+      ), 
+      LineChartBarData(  
+        dashArray: [5, 5],
+        colors: [Colors.red[400]],
+        spots: [
+          FlSpot(1, this.point2), 
+          FlSpot(2, this.point4)
+        ]
+      )
+    ];
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blueGrey[900],
@@ -179,107 +212,142 @@ class _CountryGraphState extends State<CountryGraph> {
           )
         )
       ),
-      body: Center(
-        child: Card(
-          color: Color(0xff020227), 
-          elevation: 50,
-          shape: RoundedRectangleBorder( 
-            borderRadius: BorderRadius.circular(18.0)
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Divider(
+            color:  Colors.white
           ),
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(22.0, 32.0, 42.0, 10.0),
-            child: LineChart(
-              LineChartData(  
-                minX: 0,
-                maxX: 2,
-                minY: this.point1, 
-                maxY: maxY + 6,
-                borderData: FlBorderData(
-                  border: Border.all(
-                    color: Colors.white
-                  )
-                ),
-                titlesData: FlTitlesData(
-                  leftTitles: SideTitles(  
-                    margin: 14.0,
-                    showTitles: true, 
-                    interval: maxY + 6 - this.point1,
-                    getTitles: (dynamic value) {
-                      var formatter = NumberFormat.compact();
-                      return formatter.format(value);
-                    },
-                    getTextStyles: (value) {
-                      return TextStyle(  
-                        color: Colors.white, 
-                        fontSize: 15.0, 
-                        fontFamily: 'Dosis'  
-                      );
-                    }
-                  ), 
-                  bottomTitles: SideTitles(  
-                    margin: 20.0,
-                    getTitles: (dynamic value) {
-                      value = value.round();
-                      switch (value) {
-                        case 2:
-                          return DateFormat('EEEE')
-                            .format(DateTime.now().toUtc())
-                            .substring(0, 3);
-                        case 1: 
-                          return DateFormat('EEEE')
-                            .format(DateTime.now().toUtc().subtract(
-                              Duration(days: 1)
-                            )).substring(0, 3);
-                        default: 
-                          return DateFormat('EEEE')
-                            .format(DateTime.now().toUtc().subtract(
-                              Duration(days: 2)
-                            )).substring(0, 3);
+          Center(
+            child: Card(
+              color: Color(0xff020227), 
+              elevation: 50,
+              shape: RoundedRectangleBorder( 
+                borderRadius: BorderRadius.circular(18.0)
+              ),
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(22.0, 32.0, 46.0, 10.0),
+                child: LineChart(
+                  LineChartData(  
+                    minX: 0,
+                    maxX: 2,
+                    minY: this.point1, 
+                    maxY: maxY + 6,
+                    borderData: FlBorderData(
+                      border: Border.all(
+                        color: Colors.white
+                      )
+                    ),
+                    titlesData: FlTitlesData(
+                      leftTitles: SideTitles(  
+                        margin: 14.0,
+                        showTitles: true, 
+                        interval: maxY + 6 - this.point1,
+                        getTitles: (dynamic value) {
+                          var formatter = NumberFormat.compact();
+                          return formatter.format(value);
+                        },
+                        getTextStyles: (value) {
+                          return TextStyle(  
+                            color: Colors.white, 
+                            fontSize: 15.0, 
+                            fontFamily: 'Dosis'  
+                          );
+                        }
+                      ), 
+                      bottomTitles: SideTitles(  
+                        margin: 20.0,
+                        getTitles: (dynamic value) {
+                          value = value.round();
+                          return dayOfWeek(value);
+                        },
+                        showTitles: true, 
+                        getTextStyles: (value) {
+                          return TextStyle(  
+                            color: Colors.white, 
+                            fontSize: 15.0, 
+                            fontFamily: 'Dosis'  
+                          );
+                        }
+                      )
+                    ),
+                    gridData: FlGridData(
+                      horizontalInterval: (maxY + 6 - this.point1) / 6, 
+                      getDrawingHorizontalLine: (value) {
+                        return FlLine(
+                          color: Colors.white, 
+                          strokeWidth: 1.0
+                        );
+                      },
+                    ),
+                    showingTooltipIndicators: isSwitched ? [0, 1, 2].map((index) {
+                      if (index != 2) {
+                        return ShowingTooltipIndicators(
+                          index, [
+                            LineBarSpot(
+                              lineBarsData[0], 0, lineBarsData[0].spots[index]
+                            )
+                          ]
+                        );
+                      } else {
+                        return ShowingTooltipIndicators(
+                          index, [
+                            LineBarSpot(
+                              lineBarsData[lineBarsIndex], lineBarsIndex, lineBarsData[lineBarsIndex].spots[flIndex]
+                            )
+                          ]
+                        );
                       }
-                    },
-                    showTitles: true, 
-                    getTextStyles: (value) {
-                      return TextStyle(  
-                        color: Colors.white, 
-                        fontSize: 15.0, 
-                        fontFamily: 'Dosis'  
-                      );
-                    }
+                    }).toList() : null,
+                    lineTouchData: LineTouchData(  
+                      enabled: false, 
+                      touchTooltipData: isSwitched ? LineTouchTooltipData(
+                        tooltipBgColor: Color(0xff020236), 
+                        tooltipRoundedRadius: 6.0, 
+                        getTooltipItems: (values) {
+                          return values.map((value) {
+                            if (value.x != 2) {
+                              return LineTooltipItem(
+                                "${dayOfWeek(value.x.round())}: ${intOf(value.y.truncate().toString())}", 
+                                TextStyle(  
+                                  color: Colors.white, 
+                                  fontSize: 15.0, 
+                                  fontFamily: 'Dosis'  
+                                )
+                              );
+                            } else {
+                              return LineTooltipItem(
+                                "${dayOfWeek(value.x.round())}: ${intOf(this.point3.truncate().toString())}\nPath: ${intOf(this.point4.truncate().toString())}", 
+                                TextStyle(  
+                                  color: Colors.white, 
+                                  fontSize: 15.0, 
+                                  fontFamily: 'Dosis'  
+                                )
+                              );
+                            }
+                          }).toList();
+                        }
+                      ) : null,
+                    ),
+                    lineBarsData: lineBarsData
                   )
                 ),
-                gridData: FlGridData(
-                  horizontalInterval: (maxY + 6 - this.point1) / 6, 
-                  getDrawingHorizontalLine: (value) {
-                    return FlLine(
-                      color: Colors.white, 
-                      strokeWidth: 1.0
-                    );
-                  },
-                ),
-                lineTouchData: LineTouchData(  
-                  enabled: false 
-                ),
-                lineBarsData: [
-                  LineChartBarData(
-                    spots: [
-                      FlSpot(0, this.point1), 
-                      FlSpot(1, this.point2), 
-                      FlSpot(2, this.point3)
-                    ]
-                  ), 
-                  LineChartBarData(  
-                    dashArray: [5, 5],
-                    colors: [Colors.red[400]],
-                    spots: [
-                      FlSpot(1, this.point2), 
-                      FlSpot(2, this.point4)
-                    ]
-                  )
-                ]
-              )
+              ),
             ),
           ),
-        ),
+          SwitchListTile(
+            title: CellText("Show Data Labels", 22.0, false, 1.0, TextAlign.left),
+            value: isSwitched, 
+            onChanged: (value) {
+              setState(() {
+                isSwitched = value;
+              });
+            }
+          ), 
+          Divider(
+            color:  Colors.white
+          ),
+        ],
       )
     );
   }

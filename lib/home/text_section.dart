@@ -75,6 +75,7 @@ class CardPad extends StatelessWidget {
 }
 
 class CellText extends StatelessWidget {
+  final alignment;
   final String _text;
   final num _size, spacing;
   final bool isBold;
@@ -84,7 +85,8 @@ class CellText extends StatelessWidget {
     this._size, 
     [
       this.isBold = false,
-      this.spacing = 1.0
+      this.spacing = 1.0, 
+      this.alignment = TextAlign.center
     ]
   );
 
@@ -92,7 +94,7 @@ class CellText extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       this._text,
-      textAlign: TextAlign.center,
+      textAlign: this.alignment,
       style: TextStyle( 
         fontFamily: 'Dosis', 
         fontWeight: (isBold) ? FontWeight.bold : FontWeight.w500, 
