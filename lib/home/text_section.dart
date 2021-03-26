@@ -62,11 +62,13 @@ class CellText extends StatelessWidget {
   final String _text;
   final num _size, spacing;
   final bool isBold;
+  final Color color;
 
   CellText(this._text, this._size,
       [this.isBold = false,
       this.spacing = 1.0,
-      this.alignment = TextAlign.center]);
+      this.alignment = TextAlign.center,
+      this.color = Colors.white]);
 
   @override
   Widget build(BuildContext context) {

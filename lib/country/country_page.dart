@@ -299,66 +299,77 @@ class CountryList extends StatelessWidget {
                   fontWeight: FontWeight.w700,
                   fontSize: 30.0,
                   letterSpacing: 1.25))),
-      body: ListView.builder(
-          itemCount: (keys != null) ? keys.length : dataTable.keys.length,
-          itemBuilder: (context, index) {
-            return Column(
+      body: (keys != null && keys.length == 0)
+          ? Column(
               children: [
-                (index == 0)
-                    ? Column(
-                        children: [
-                          Divider(color: Colors.white),
-                          ListTile(
-                              title: CellText(
-                                  (keys != null)
-                                      ? "Search Results For \'${toBeginningOfSentenceCase(this.search.toLowerCase())}\'"
-                                      : "Country-By-Country Statistics",
-                                  28.0)),
-                          Divider(color: Colors.white)
-                        ],
-                      )
-                    : Padding(padding: const EdgeInsets.only(top: 0.0)),
-                ListTile(
-                    leading: CellText(
-                        (keys != null)
-                            ? "${dataTable.keys.toList().lastIndexOf(keys[index]) + 1}"
-                            : "${index + 1}",
-                        22.0),
-                    title: CellText(
-                        (keys != null)
-                            ? '${keys[index]}'
-                            : '${dataTable.keys.toList()[index]}',
-                        22.0),
-                    trailing: IconButton(
-                        icon: Icon(Icons.arrow_right, size: 30.0),
-                        padding: const EdgeInsets.only(left: 10.0),
-                        onPressed: () {
-                          try {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => CountryPage(
-                                        dataTable.keys.toList()[index],
-                                        double.parse(
-                                            dataTable[dataTable.keys.toList()[index]][4]
-                                                .replaceAll(",", "")),
-                                        double.parse(
-                                            dataTable[dataTable.keys.toList()[index]]
-                                                    [2]
-                                                .replaceAll(",", "")),
-                                        double.parse(
-                                            dataTable[dataTable.keys.toList()[index]]
-                                                    [0]
-                                                .replaceAll(",", "")),
-                                        double.parse(dataTable[dataTable.keys.toList()[index]][2].replaceAll(",", "")) +
-                                            (double.parse(dataTable[dataTable.keys.toList()[index]][2].replaceAll(",", "")) -
-                                                double.parse(dataTable[dataTable.keys.toList()[index]][4].replaceAll(",", ""))))));
-                          } catch (e) {}
-                        })),
                 Divider(color: Colors.white),
+                ListTile(
+                    title: CellText(
+                        "No Results For \'${toBeginningOfSentenceCase(this.search.toLowerCase())}\'",
+                        28.0)),
+                Divider(color: Colors.white)
               ],
-            );
-          }),
+            )
+          : ListView.builder(
+              itemCount: (keys != null) ? keys.length : dataTable.keys.length,
+              itemBuilder: (context, index) {
+                return Column(
+                  children: [
+                    (index == 0)
+                        ? Column(
+                            children: [
+                              Divider(color: Colors.white),
+                              ListTile(
+                                  title: CellText(
+                                      (keys != null)
+                                          ? "Search Results For \'${toBeginningOfSentenceCase(this.search.toLowerCase())}\'"
+                                          : "Country-By-Country Statistics",
+                                      28.0)),
+                              Divider(color: Colors.white)
+                            ],
+                          )
+                        : Padding(padding: const EdgeInsets.only(top: 0.0)),
+                    ListTile(
+                        leading: CellText(
+                            (keys != null)
+                                ? "${dataTable.keys.toList().lastIndexOf(keys[index]) + 1}"
+                                : "${index + 1}",
+                            22.0),
+                        title: CellText(
+                            (keys != null)
+                                ? '${keys[index]}'
+                                : '${dataTable.keys.toList()[index]}',
+                            22.0),
+                        trailing: IconButton(
+                            icon: Icon(Icons.arrow_right, size: 30.0),
+                            padding: const EdgeInsets.only(left: 10.0),
+                            onPressed: () {
+                              try {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => CountryPage(
+                                            dataTable.keys.toList()[index],
+                                            double.parse(
+                                                dataTable[dataTable.keys.toList()[index]][4]
+                                                    .replaceAll(",", "")),
+                                            double.parse(
+                                                dataTable[dataTable.keys.toList()[index]]
+                                                        [2]
+                                                    .replaceAll(",", "")),
+                                            double.parse(
+                                                dataTable[dataTable.keys.toList()[index]]
+                                                        [0]
+                                                    .replaceAll(",", "")),
+                                            double.parse(dataTable[dataTable.keys.toList()[index]][2].replaceAll(",", "")) +
+                                                (double.parse(dataTable[dataTable.keys.toList()[index]][2].replaceAll(",", "")) -
+                                                    double.parse(dataTable[dataTable.keys.toList()[index]][4].replaceAll(",", ""))))));
+                              } catch (e) {}
+                            })),
+                    Divider(color: Colors.white),
+                  ],
+                );
+              }),
     );
   }
 }
