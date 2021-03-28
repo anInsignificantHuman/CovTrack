@@ -75,6 +75,7 @@ class CellText extends StatelessWidget {
     return Text(this._text,
         textAlign: this.alignment,
         style: TextStyle(
+            color: this.color,
             fontFamily: 'Dosis',
             fontWeight: (isBold) ? FontWeight.bold : FontWeight.w500,
             fontSize: this._size,

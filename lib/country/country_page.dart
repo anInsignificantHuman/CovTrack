@@ -306,8 +306,18 @@ class CountryList extends StatelessWidget {
                 ListTile(
                     title: CellText(
                         "No Results For \'${toBeginningOfSentenceCase(this.search.toLowerCase())}\'",
-                        28.0)),
-                Divider(color: Colors.white)
+                        28.0,
+                        false,
+                        1.15,
+                        TextAlign.center,
+                        Colors.redAccent[100])),
+                Divider(color: Colors.white),
+                Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Padding(padding: const EdgeInsets.only(top: 10.0)),
+                      Icon(Icons.search_off, size: 50.0)
+                    ])
               ],
             )
           : ListView.builder(
@@ -324,7 +334,11 @@ class CountryList extends StatelessWidget {
                                       (keys != null)
                                           ? "Search Results For \'${toBeginningOfSentenceCase(this.search.toLowerCase())}\'"
                                           : "Country-By-Country Statistics",
-                                      28.0)),
+                                      28.0,
+                                      false,
+                                      1.15,
+                                      TextAlign.center,
+                                      Colors.greenAccent)),
                               Divider(color: Colors.white)
                             ],
                           )
@@ -349,21 +363,31 @@ class CountryList extends StatelessWidget {
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) => CountryPage(
-                                            dataTable.keys.toList()[index],
-                                            double.parse(
-                                                dataTable[dataTable.keys.toList()[index]][4]
+                                            (keys == null)
+                                                ? dataTable.keys.toList()[index]
+                                                : keys[index],
+                                            double.parse((keys == null)
+                                                ? dataTable[dataTable.keys.toList()[index]][4]
+                                                    .replaceAll(",", "")
+                                                : dataTable[keys[index]][4]
                                                     .replaceAll(",", "")),
-                                            double.parse(
-                                                dataTable[dataTable.keys.toList()[index]]
-                                                        [2]
+                                            double.parse((keys == null)
+                                                ? dataTable[dataTable.keys.toList()[index]][2]
+                                                    .replaceAll(",", "")
+                                                : dataTable[keys[index]][2]
                                                     .replaceAll(",", "")),
-                                            double.parse(
-                                                dataTable[dataTable.keys.toList()[index]]
-                                                        [0]
-                                                    .replaceAll(",", "")),
-                                            double.parse(dataTable[dataTable.keys.toList()[index]][2].replaceAll(",", "")) +
-                                                (double.parse(dataTable[dataTable.keys.toList()[index]][2].replaceAll(",", "")) -
-                                                    double.parse(dataTable[dataTable.keys.toList()[index]][4].replaceAll(",", ""))))));
+                                            double.parse((keys == null)
+                                                ? dataTable[dataTable.keys.toList()[index]][0].replaceAll(",", "")
+                                                : dataTable[keys[index]][0].replaceAll(",", "")),
+                                            double.parse((keys == null) 
+                                                ? dataTable[dataTable.keys.toList()[index]][2].replaceAll(",", "") 
+                                                : dataTable[keys[index]][2].replaceAll(",", "")) + 
+                                                (double.parse((keys == null) 
+                                                    ? dataTable[dataTable.keys.toList()[index]][2].replaceAll(",", "") 
+                                                    : dataTable[keys[index]][2].replaceAll(",", "")) - 
+                                                    double.parse((keys == null) 
+                                                        ? dataTable[dataTable.keys.toList()[index]][4].replaceAll(",", "") 
+                                                        : dataTable[keys[index]][4].replaceAll(",", ""))))));
                               } catch (e) {}
                             })),
                     Divider(color: Colors.white),
